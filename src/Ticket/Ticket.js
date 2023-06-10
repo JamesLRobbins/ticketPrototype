@@ -114,7 +114,7 @@ console.log(data)
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        <Form.Button color='green'>Submit Correction</Form.Button>
+        <Form.Button color='primary'>Submit Correction</Form.Button>
       </Form>
 
 
