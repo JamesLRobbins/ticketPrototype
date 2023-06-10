@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Input, Segment, Form, Header, Divider, Icon, Grid } from "semantic-ui-react"
+import { Button, Segment, Form, Header, Divider, Icon, Grid } from "semantic-ui-react"
 
 function Ticket() {
 const [data, setData] = useState([])
@@ -96,7 +96,7 @@ console.log(data)
           <Form.Group>
             <Form.Input placeholder="Time In" value={val.timeIn} onChange={(e)=>handleChange(e,i)} />
             <Form.Input placeholder="Time Out" value={val.timeOut} onChange={(e)=>handleChange(e,i)} />
-            <Button icon="delete" onClick={()=>handleDeletePunch(i)} />
+            <Button color="red" icon="delete" onClick={()=>handleDeletePunch(i)} />
           </Form.Group>
           )
         }
@@ -107,13 +107,14 @@ console.log(data)
             <Form.Group>
               <Form.Select placeholder="paycode" value={val.paycode} options={paycodesOptions}/>
               <Form.Input placeholder="amount" value={val.amount} onChange={(e)=>handleChange(e,i)} />
-              <Button icon="delete" onClick={()=>handleDeletePaycode(i)} />
+              <Button color="red" icon="delete" onClick={()=>handleDeletePaycode(i)} />
             </Form.Group>
             )
         }
             </Grid.Column>
           </Grid.Row>
         </Grid>
+        <Form.Button color='green'>Submit Correction</Form.Button>
       </Form>
 
 
