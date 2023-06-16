@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
 import { Button, Segment, Form, Header, Divider, Icon, Grid } from "semantic-ui-react"
+import DatePicker from 'react-datepicker'
+
+import 'react-datepicker/dist/react-datepicker.css'
 
 function Ticket() {
 const [data, setData] = useState([])
 const [paycodes, setPaycodes] = useState([])
 
 const handleClickPunches=() => {
-  setData([...data, {timeIn: "", timeOut: ""}])
+  setData([...data, {date: "", timeIn: "", timeOut: ""}])
 }
 
 const handleClickPaycode=() => {
-  setPaycodes([...paycodes, {paycode: "", amount: ""}])
+  setPaycodes([...paycodes, {date: "", paycode: "", amount: ""}])
 }
 
 const handleChange=(e, i) => {
@@ -39,6 +42,8 @@ const paycodesOptions = [
   {key: "brvm", text: "Bereavement", value: "bereavement"},
   {key: "jd", text: "Jury Duty", value: "Jury Duty"},
 ]
+
+const [startDate, SetStartDate] = useState(new Date())
 
 console.log(data)
 
@@ -80,7 +85,7 @@ console.log(data)
         <h4>Corrections Needed</h4>
         <Grid celled columns={2}>
           <Grid.Row>
-            <Grid.Column textAlign='center'><h5>Timestamps - <i>(Missing timestamps or timestamp corrections)</i></h5></Grid.Column>
+            <Grid.Column textAlign='center'><h5>Timestamps - <i>(Missing timestamps or timecard corrections)</i></h5></Grid.Column>
             <Grid.Column textAlign='center'><h5>Paycodes - <i>(Missing paycodes)</i></h5></Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -94,6 +99,7 @@ console.log(data)
             {
           data.map((val, i)=>
           <Form.Group>
+            <DatePicker selected={startDate} onChange={(date) => SetStartDate(date)}/>
             <Form.Input placeholder="Time In" value={val.timeIn} onChange={(e)=>handleChange(e,i)} />
             <Form.Input placeholder="Time Out" value={val.timeOut} onChange={(e)=>handleChange(e,i)} />
             <Button color="red" icon="delete" onClick={()=>handleDeletePunch(i)} />
@@ -105,6 +111,7 @@ console.log(data)
             {
             paycodes.map((val, i)=>
             <Form.Group>
+              <DatePicker selected={startDate} onChange={(date) => SetStartDate(date)}/>
               <Form.Select placeholder="paycode" value={val.paycode} options={paycodesOptions}/>
               <Form.Input placeholder="amount" value={val.amount} onChange={(e)=>handleChange(e,i)} />
               <Button color="red" icon="delete" onClick={()=>handleDeletePaycode(i)} />
