@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Segment, Form, Header, Divider, Icon, Grid } from "semantic-ui-react"
+import { Button, Segment, Form, Header, Divider, Container, Modal, Grid, Icon } from "semantic-ui-react"
 import DatePicker from 'react-datepicker'
 
 import 'react-datepicker/dist/react-datepicker.css'
@@ -16,7 +16,14 @@ const handleClickPaycode=() => {
   setPaycodes([...paycodes, {date: "", paycode: "", amount: ""}])
 }
 
-const handleChange=(e, i) => {
+const handleChangeData=(e, i) => {
+  const {name,value}=e.target
+  const onChangeVal = [...data]
+  onChangeVal[i][name]=value
+  setData(onChangeVal)
+}
+
+const handleChangePaycode=(e, i) => {
   const {name,value}=e.target
   const onChangeVal = [...data]
   onChangeVal[i][name]=value
@@ -45,9 +52,12 @@ const paycodesOptions = [
 
 const [startDate, SetStartDate] = useState(new Date())
 
+const [open, setOpen] = React.useState(false)
+
 console.log(data)
 
   return (
+    <Container>
     <Segment>
       <Header as="h1">Payroll Correction Request</Header>
       <Header as="h5">HRBPs & People Leaders - submit kronos corrections for review here - Not for PPX employees</Header>
@@ -81,56 +91,77 @@ console.log(data)
           <label>Choose your HRBP</label>
           <input placeholder='HRBP'></input>
         </Form.Field>
-        <Divider />
-        <h4>Corrections Needed</h4>
-        <Grid celled columns={2}>
-          <Grid.Row>
-            <Grid.Column textAlign='center'><h5>Timestamps - <i>(Missing timestamps or timecard corrections)</i></h5></Grid.Column>
-            <Grid.Column textAlign='center'><h5>Paycodes - <i>(Missing paycodes)</i></h5></Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column><Button primary icon onClick={handleClickPunches}>
-          <Icon name="add" />New Timestamp</Button></Grid.Column>
-          <Grid.Column><Button primary icon onClick={handleClickPaycode}>
-          <Icon name="add" />Add Paycode </Button></Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column>
-            {
-          data.map((val, i)=>
-          <Form.Group>
-            <DatePicker selected={startDate} onChange={(date) => SetStartDate(date)}/>
-            <Form.Input placeholder="Time In" value={val.timeIn} onChange={(e)=>handleChange(e,i)} />
-            <Form.Input placeholder="Time Out" value={val.timeOut} onChange={(e)=>handleChange(e,i)} />
-            <Button color="red" icon="delete" onClick={()=>handleDeletePunch(i)} />
-          </Form.Group>
-          )
-        }
-            </Grid.Column>
-            <Grid.Column>
-            {
-            paycodes.map((val, i)=>
-            <Form.Group>
-              <DatePicker selected={startDate} onChange={(date) => SetStartDate(date)}/>
-              <Form.Select placeholder="paycode" value={val.paycode} options={paycodesOptions}/>
-              <Form.Input placeholder="amount" value={val.amount} onChange={(e)=>handleChange(e,i)} />
-              <Button color="red" icon="delete" onClick={()=>handleDeletePaycode(i)} />
-            </Form.Group>
-            )
-        }
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <h5>Please select button below to document corrections</h5>
+        <Modal
+   onClose={() => setOpen(false)}
+   onOpen={() => setOpen(true)}
+   open={open}
+   trigger={<Button>Add Corrections</Button>}
+ >
+   <Modal.Header>Kronos Correction</Modal.Header>
+   <Modal.Content>
+   <Form>
+   <Grid celled>
+<Grid.Row>
+  <Grid.Column textAlign='center'><h5>Timestamps - <i>(Missing timestamps or timecard corrections)</i></h5></Grid.Column>
+  
+</Grid.Row>
+<Grid.Row>
+  <Grid.Column><Button primary icon onClick={handleClickPunches}>
+<Icon name="add" />New Timestamp</Button></Grid.Column>
+
+</Grid.Row>
+
+  {
+data.map((val, i)=>
+<Form.Group>
+  <DatePicker selected={startDate} onChange={(date) => SetStartDate(date)}/>
+  <Form.Input placeholder="Time In" value={val.timeIn} onChange={(e)=>handleChangeData(e,i)} />
+  <Form.Input placeholder="Time Out" value={val.timeOut} onChange={(e)=>handleChangeData(e,i)} />
+  <Button color="red" icon="delete" onClick={()=>handleDeletePunch(i)} />
+</Form.Group>
+)
+}
+<Grid.Row>
+<Grid.Column textAlign='center'><h5>Paycodes - <i>(Missing paycodes)</i></h5></Grid.Column>
+</Grid.Row>
+<Grid.Row>
+<Grid.Column><Button primary icon onClick={handleClickPaycode}>
+<Icon name="add" />Add Paycode </Button></Grid.Column>
+</Grid.Row>
+{
+  paycodes.map((val, i)=>
+  <Form.Group>
+    <DatePicker selected={startDate} onChange={(date) => SetStartDate(date)}/>
+    <Form.Select placeholder="paycode" value={val.paycode} onChange={(e)=>handleChangePaycode(e,i)} options={paycodesOptions}/>
+    <Form.Input placeholder="amount" value={val.amount} onChange={(e)=>handleChangePaycode(e,i)} />
+    <Button color="red" icon="delete" onClick={()=>handleDeletePaycode(i)} />
+  </Form.Group>
+  )
+} 
+
+
+</Grid>
+</Form>
+
+   </Modal.Content>
+   <Modal.Actions>
+     <Button color='black' onClick={() => setOpen(false)}>
+       Finished
+     </Button>
+   </Modal.Actions>
+ </Modal>
+ <Divider />
         <Form.Button color='green'>Submit Correction</Form.Button>
       </Form>
-
-
-
 </Segment>
+ </Container>
   )
 }
 
 export default Ticket
+
+
 
 
 
